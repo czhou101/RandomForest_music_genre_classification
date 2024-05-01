@@ -53,6 +53,17 @@ print("\nAccuracy on train = %0.4f " % acc_train)
 
 
 
-y_predict = net.predict(X_test)
+# do majority voting between split audio to find 
+# label
+y_predict10 = net.predict(X_test)
+y_predictions = np.array_split(y_predict10, 200)
+
+y_predict = []
+import statistics as st
+for idx, prediction in enumerate(y_predictions):
+    y_predict.append(st.mode(prediction))
+   
+
+# decode labels and write csv
 y_predict = encoder.inverse_transform(y_predict)
 utils.write_csv(y_predict=y_predict, fname='svm_split5_fs')
